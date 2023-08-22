@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		font-family: 'Montserrat', 'sans-serif';
+	}
+
+	:root {
+		--color-text-base: 26, 26, 26;
+		--color-text-muted: 77, 77, 77;
+		--color-text-inverted: 243, 119, 37;
+		--color-accent: 243, 119, 37;
+		--color-bg-base: 255, 255, 255;
+		--color-bg-muted: 234, 234, 234;
+		--color-button-base: 26, 26, 26;
+		--color-button-base-hover: 26, 26, 26;
+		--color-button-text-base: 255, 255, 255;
+	}
+
+	.dark-theme {
+		--color-text-base: 255, 255, 255;
+		--color-text-muted: 234, 234, 234;
+		/* --color-text-inverted:  243, 119, 37 ; */
+		--color-accent: 243, 119, 37;
+		--color-bg-base: 26, 26, 26;
+		--color-bg-muted: 77, 77, 77;
+		--color-button-base: 26, 26, 26;
+		--color-button-base-hover: 26, 26, 26;
+		--color-button-text-base: 255, 255, 255;
+		/* --color-button-muted: ; */
+		/* --color-button-accent-hover: ; */
+	}
+}
+
+@layer components {
+	.btn-readMore {
+		@apply px-2 py-3 text-xs font-medium tracking-wider border-2 rounded-lg lg:text-sm lg:py-3 lg:px-5 hover:border-[#F37725] hover:text-skin-accent bg-skin-muted text-skin-muted transition-all duration-300 ease-in-out;
+	}
+}
+
+@layer utilities {
+	.responsiveNavFooter {
+		@apply min-w-full px-6 lg:px-24;
+	}
+
+	.nav-link {
+		@apply relative hover:text-skin-accent;
+	}
+
+	.nav-link::after {
+		@apply content-[''] bg-[#F37725] h-[3px] absolute w-[0%] left-0 -bottom-[10px] rounded-xl duration-300;
+	}
+
+	.nav-link:hover::after {
+		@apply w-full;
+	}
+}
+
+/* scrollbar.css  */
+::-webkit-scrollbar {
+	width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #f37725;
+	border-radius: 0.25rem;
+}
+
+/* ::-webkit-scrollbar-track {
+	background-color:;
+} */
