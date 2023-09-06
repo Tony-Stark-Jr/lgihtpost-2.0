@@ -4,11 +4,15 @@ import reducer from './reducer';
 const initialState = {
 	isLoading: true,
 	query: '',
-	page: 1,
-	totalResults: 0,
 	articles: [],
-	category: 'world',
+	category: '',
 	bookMarks: [],
+	// For pagination
+	pagination: 0,
+	limit: 0,
+	offset: 0,
+	count: 0,
+	total: 0
 };
 
 const AppContext = createContext();
@@ -24,29 +28,14 @@ function AppProvider({ children }) {
 		});
 	};
 
-	// Pagination
-	const getNextPage = () => {
-		dispatch({
-			type: 'NEXT_PAGE',
-		});
-	};
-
-	const getPrevPage = () => {
-		dispatch({
-			type: 'PREV_PAGE',
-		});
-	};
-
 	const memoizedValue = useMemo(
 		() => ({
 			state,
 			...state,
 			dispatch,
 			searchPost,
-			getNextPage,
-			getPrevPage,
 		}),
-		[state, dispatch, searchPost, getNextPage, getPrevPage]
+		[state, dispatch, searchPost]
 	);
 
 	return (

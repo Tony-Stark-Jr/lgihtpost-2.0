@@ -1,10 +1,12 @@
 const reducer = (state, action) => {
 	switch (action.type) {
-		case 'GET_NEWS':
+		case 'SET_NEWS':
 			return {
 				...state,
 				articles: action.payload.articles,
-				totalResults: Math.floor(action.payload.totalResults / 10),
+
+				pagination: action.payload.pagination,
+
 				isLoading: false,
 			};
 
@@ -20,23 +22,10 @@ const reducer = (state, action) => {
 				query: action.payload,
 			};
 
-		case 'NEXT_PAGE':
-			let pageNumInc = state.page + 1;
-			if (pageNumInc >= state.totalResults) {
-				pageNumInc = 1;
-			}
+		case 'SET_PAGE':
 			return {
 				...state,
-				page: pageNumInc,
-			};
-		case 'PREV_PAGE':
-			let pageNum = state.page - 1;
-			if (pageNum <= 0) {
-				pageNum = state.totalResults;
-			}
-			return {
-				...state,
-				page: pageNum,
+				offset: action.payload,
 			};
 
 		case 'BOOKMARKS_POST':

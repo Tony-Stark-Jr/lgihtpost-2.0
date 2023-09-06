@@ -8,12 +8,13 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useGlobalContext } from './AppProvider';
 import SocialModal from './SocialModal';
 import formattedDate from '../utils/formattedDate';
+import todayDate from '../utils/todayDate';
 import Pagination from './Pagination';
 import 'react-toastify/dist/ReactToastify.css';
 
 function NewsCard({ category }) {
 	if (category === undefined) {
-		category = '';
+		category = 'general';
 	}
 
 	// For share modal
@@ -29,71 +30,32 @@ function NewsCard({ category }) {
 	};
 
 	// API
-	let API = 'https://newsapi.org/v2/top-headlines?';
-	const API_KEY = import.meta.env.VITE_API_KEY;
+	let API = 'http://api.mediastack.com/v1/news?';
+	const API_KEY = import.meta.env.VITE_ACCESS_KEY;
 
 	const { state, dispatch } = useGlobalContext();
-	const { isLoading, query, articles, page } = state;
+	const { isLoading, query, articles, offset } = state;
 
-	// Dummy data for development purpose
-	// const articles = [
-	//     {
-	//         "source": {
-	//             "id": "reuters",
-	//             "name": "Reuters"
-	//         },
-	//         "author": "Stella Qiu",
-	//         "title": "Asian shares stumble as US yields advance, dollar buoyant - Reuters",
-	//         "description": "Asian shares stumbled on Thursday as U.S. bonds yields hit nine-month peaks and pushed the dollar higher, while investors waited anxiously to see if results from Apple and Amazon justified the tech sector's sky-high valuations.",
-	//         "url": "https://www.reuters.com/markets/global-markets-wrapup-1-pix-2023-08-03/",
-	//         "urlToImage": "https://www.reuters.com/resizer/tsBLNxhHax2lB8C1kxnuC3WZ-ek=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/RZMV5XSY2BN6BNXMCATQDOJV7Y.jpg",
-	//         "publishedAt": "2023-08-03T06:04:32Z",
-	//         "content": "SYDNEY, Aug 3 (Reuters) - Asian shares stumbled on Thursday as U.S. bonds yields hit nine-month peaks and pushed the dollar higher, while investors waited anxiously to see if results from Apple and A… [+4239 chars]"
-	//     },
-	//     {
-	//         "source": {
-	//             "id": "cnn",
-	//             "name": "CNN"
-	//         },
-	//         "author": "Stephen Collinson",
-	//         "title": "Trump set to return to Washington for monumental court date – but a national catharsis is unlikely - CNN",
-	//         "description": "Former President Donald Trump on Thursday is expected to return to the epicenter of his alleged bid to overthrow the 2020 election to answer historic charges, including conspiracy to defraud the United States.",
-	//         "url": "https://www.cnn.com/2023/08/03/politics/trump-returns-to-washington-arraignment/index.html",
-	//         "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230803104158-donald-trump-0624.jpg?c=16x9&q=w_800,c_fill",
-	//         "publishedAt": "2023-08-03T06:01:00Z",
-	//         "content": "Former President Donald Trump on Thursday is expected to return to the epicenter of his alleged bid to overthrow the 2020 election to answer historic charges, including conspiracy to defraud the Unit… [+7880 chars]"
-	//     },
-	//     {
-	//         "source": {
-	//             "id": "reuters",
-	//             "name": "Reuters"
-	//         },
-	//         "author": "Stella Qiu",
-	//         "title": "Asian shares stumble as US yields advance, dollar buoyant - Reuters",
-	//         "description": "Asian shares stumbled on Thursday as U.S. bonds yields hit nine-month peaks and pushed the dollar higher, while investors waited anxiously to see if results from Apple and Amazon justified the tech sector's sky-high valuations.",
-	//         "url": "https://www.reuters.com/markets/global-markets-wrapup-1-pix-2023-08-03/",
-	//         "urlToImage": "https://www.reuters.com/resizer/tsBLNxhHax2lB8C1kxnuC3WZ-ek=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/RZMV5XSY2BN6BNXMCATQDOJV7Y.jpg",
-	//         "publishedAt": "2023-08-03T06:04:32Z",
-	//         "content": "SYDNEY, Aug 3 (Reuters) - Asian shares stumbled on Thursday as U.S. bonds yields hit nine-month peaks and pushed the dollar higher, while investors waited anxiously to see if results from Apple and A… [+4239 chars]"
-	//     },
-	// ]
 
 	// To set api to user interface
-	
+
 	const fetchApiData = async (url) => {
 		dispatch({ type: 'SET_LOADING' });
 
 		try {
 			let res = await fetch(url);
 			res = await res.json();
-			const art = res.articles;
+			const art = res.data;
+			// console.log(res.pagination);
 			dispatch({
-				type: 'GET_NEWS',
+				type: 'SET_NEWS',
 				payload: {
 					articles: art,
-					totalResults: res.totalResults,
+					pagination: res.pagination,
 				},
+
 			});
+			// console.log(pagination);
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -101,11 +63,11 @@ function NewsCard({ category }) {
 
 	useEffect(() => {
 		const timeOut = setTimeout(() => {
-			// newsapi.org
-			fetchApiData(`${API}q=${query}&country=us&category=${category}&apikey=${API_KEY}&page=${page}`)
+			// mediastack.com
+			fetchApiData(`${API}keywords=${query}&countries=us,gb,in,au&categories=${category}&access_key=${API_KEY}&languages = en&date=${todayDate}`)
 		}, 1000);
 		return () => clearTimeout(timeOut);
-	}, [query, category, page]);
+	}, [query, category, offset]);
 
 	const handleBookmarks = (news) => {
 		let oldData = JSON.parse(localStorage.getItem('news') || '[]');
@@ -159,8 +121,8 @@ function NewsCard({ category }) {
 					title,
 					url,
 					source,
-					urlToImage,
-					publishedAt,
+					image,
+					published_at,
 					description,
 				} = article;
 				return (
@@ -170,10 +132,10 @@ function NewsCard({ category }) {
 						<div className="items-center gap-8 lg:grid lg:grid-cols-3 lg:h-full ">
 							<div>
 								<p className="mb-2 text-xs tracking-wider md:text-base text-skin-muted">
-									Source: {source.name}
+									Source: {source}
 								</p>
 								<img
-									src={urlToImage}
+									src={image}
 									alt=""
 									className="lg:w-[400px] 2xl:max-h-[320px]  rounded-lg  "
 								/>
@@ -189,7 +151,7 @@ function NewsCard({ category }) {
 
 								<div className="flex items-center justify-between gap-1 text-base text-skin-muted">
 									<p className="text-xs tracking-wider lg:text-xm">
-										{formattedDate(publishedAt)}
+										{formattedDate(published_at)}
 									</p>
 									<p className="text-xs tracking-wider lg:text-xm">
 										Author: {author}
