@@ -3,7 +3,11 @@
 		"browser": true,
 		"es2021": true
 	},
-	"extends": ["plugin:react/recommended", "airbnb", "prettier"],
+	"extends": [
+		"plugin:react/recommended",
+		"airbnb",
+		"prettier"
+	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
 		"sourceType": "module"
@@ -11,12 +15,19 @@
 	"rules": {
 		"react/react-in-jsx-scope": 0,
 		"import/extensions": 0,
-		"camelcase": 0
+		"camelcase": 0,
+		"react/prop-types": "off",
+		"eslint-disable-next-line react/prop-types": "off",
+		"no-use-before-define": "off",
+		"eslint-disable-next-line no-param-reassign": 0,
+		"no-case-declarations":"off"
 	},
 	"settings": {
 		"react": {
 			"version": "18.2"
 		}
 	},
-	"plugins": ["react-refresh"]
+	"plugins": [
+		"react-refresh"
+	]
 }

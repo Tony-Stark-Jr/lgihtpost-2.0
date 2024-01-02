@@ -7,12 +7,8 @@ const initialState = {
 	articles: [],
 	category: '',
 	bookMarks: [],
-	// For pagination
-	pagination: 0,
-	limit: 0,
-	offset: 0,
-	count: 0,
-	total: 0
+	totalResults: 0,
+	page: 1,
 };
 
 const AppContext = createContext();
@@ -28,14 +24,30 @@ function AppProvider({ children }) {
 		});
 	};
 
+	// Pagination
+	const getNextPage = () => {
+		dispatch({
+			type: "NEXT_PAGE",
+		})
+	}
+
+	const getPrevPage = () => {
+		dispatch({
+			type: "PREV_PAGE",
+		})
+	}
+
 	const memoizedValue = useMemo(
 		() => ({
 			state,
 			...state,
 			dispatch,
 			searchPost,
+			getPrevPage,
+			getNextPage
 		}),
-		[state, dispatch, searchPost]
+		[state, dispatch, searchPost, getPrevPage,
+			getNextPage]
 	);
 
 	return (

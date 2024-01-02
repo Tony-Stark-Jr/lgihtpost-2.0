@@ -1,6 +1,7 @@
 import React from 'react';
 import NewsCard from './NewsCard';
 
+// eslint-disable-next-line react/prop-types
 function NewsSource({ category }) {
 	const date = new Date();
 

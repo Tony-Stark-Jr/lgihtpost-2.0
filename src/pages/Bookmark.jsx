@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import { useGlobalContext } from '../components/AppProvider';
 import {
-	IconBookFilled,
-	IconBookmark,
 	IconBookmarkFilled,
 	IconShare,
 } from '@tabler/icons-react';
+import toast from 'react-hot-toast';
+import { useGlobalContext } from '../components/AppProvider';
 import formattedDate from '../utils/formattedDate';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import SocialModal from '../components/SocialModal';
+
 
 function Bookmark() {
 	const { state, dispatch } = useGlobalContext();
 	const { isLoading } = state;
 
 	// For notification
-
 	const notifyUnbookmark = () => {
 		toast.success('News is successfully unsaved');
 	};
@@ -37,7 +35,7 @@ function Bookmark() {
 	};
 
 	const bookmarkState = () => {
-		let temp = bookmarkData.map((news) => news.url);
+		const temp = bookmarkData.map((news) => news.url);
 		dispatch({
 			type: 'BOOKMARKS_POST',
 			payload: {
@@ -46,14 +44,13 @@ function Bookmark() {
 		});
 	};
 
-	// Loader
-	// if (isLoading) {
-	//   return (
-	//     <div className="flex justify-center h-full">
-	//       <span class="loader"></span>
-	//     </div>
-	//   )
-	// }
+	if (isLoading) {
+		return (
+			<div className="flex justify-center h-full">
+				<span className="loader" />
+			</div>
+		);
+	}
 
 	return (
 		<div className="mt-8 mb-32 lg:mt-16 bg-skin-muted dark:dark-theme">
@@ -116,11 +113,10 @@ function Bookmark() {
 													type="button"
 													onClick={() => handleBookmarks(article)}
 												>
-													{
-														<IconBookmarkFilled className="w-6 h-6 lg:h-8 lg:w-8" />
-													}
+
+													<IconBookmarkFilled className="w-6 h-6 lg:h-8 lg:w-8" />
+
 												</button>
-												<ToastContainer />
 											</div>
 
 											<div className="share">

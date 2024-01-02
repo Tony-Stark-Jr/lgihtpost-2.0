@@ -1,5 +1,7 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Header';
 import Bookmark from './pages/Bookmark';
 import NewsSource from './components/NewsSource';
@@ -8,6 +10,7 @@ import Footer from './components/Footer';
 function App() {
 	return (
 		<div className=" App bg-skin-muted dark:dark-theme">
+			<Toaster position="top-right" />
 			<BrowserRouter>
 				<Navbar />
 				<Routes>

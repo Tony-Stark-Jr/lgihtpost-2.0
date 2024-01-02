@@ -1,6 +1,6 @@
 import { IconSearch, IconArrowLeft } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useGlobalContext } from '../components/AppProvider';
+import { useGlobalContext } from "./AppProvider";
 
 function Search() {
 	const { query, searchPost } = useGlobalContext();
